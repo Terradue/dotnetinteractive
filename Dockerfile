@@ -1,4 +1,4 @@
-FROM jupyter/base-notebook:latest
+FROM jupyter/base-notebook:ubuntu-22.04
 
 # Install .NET CLI dependencies
 
@@ -28,7 +28,7 @@ RUN apt-get update \
         libc6 \
         libgcc1 \
         libgssapi-krb5-2 \
-        # libicu70 \
+        libicu70 \
         # libssl1.1 \
         libstdc++6 \
         zlib1g \
