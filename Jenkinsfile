@@ -11,7 +11,7 @@ pipeline {
           def mType=getTypeOfVersion(env.BRANCH_NAME)
           def testsuite = docker.build(descriptor.docker_image_name + ":${mType}" + descriptor.docker_image_version, ".")
           testsuite.tag("${mType}latest")
-          docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-emmanuelmathot') {
+          docker.withRegistry('https://registry.hub.docker.com', 'cr.terradue.com-jenkins') {
             testsuite.push("${mType}" + descriptor.docker_image_version)
             testsuite.push("${mType}latest")
           }

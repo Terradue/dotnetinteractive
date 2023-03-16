@@ -11,8 +11,6 @@ ENV HOME /home/${NB_USER}
 WORKDIR ${HOME}
 
 USER root
-RUN apt-get update
-RUN apt-get install -y curl
 
 ENV \
     # Enable detection of running in a container
@@ -30,21 +28,21 @@ RUN apt-get update \
         libc6 \
         libgcc1 \
         libgssapi-krb5-2 \
-        libicu66 \
-        libssl1.1 \
+        libicu70 \
+        # libssl1.1 \
         libstdc++6 \
         zlib1g \
+        curl \
+        supervisor \
     && rm -rf /var/lib/apt/lists/*
 
 # Install .NET Core SDK
 
 # When updating the SDK version, the sha512 value a few lines down must also be updated.
-ENV DOTNET_SDK_VERSION 5.0.102
+ENV DOTNET_SDK_VERSION 7.0.100
 
-RUN dotnet_sdk_version=5.0.102 \
+RUN dotnet_sdk_version=7.0.100 \
     && curl -SL --output dotnet.tar.gz https://dotnetcli.azureedge.net/dotnet/Sdk/$dotnet_sdk_version/dotnet-sdk-$dotnet_sdk_version-linux-x64.tar.gz \
-    && dotnet_sha512='0ce2d5365ca39808fb71baec4584d4ec786491c3735543dc93244604ea97e242377d0987cd8b1e529258dee68f203b5780559201e7ea6d84487d6d8d433329b3' \
-    && echo "$dotnet_sha512 dotnet.tar.gz" | sha512sum -c - \
     && mkdir -p /usr/share/dotnet \
     && tar -ozxf dotnet.tar.gz -C /usr/share/dotnet \
     && rm dotnet.tar.gz \
@@ -55,11 +53,12 @@ RUN dotnet_sdk_version=5.0.102 \
 # Copy package sources
 COPY NuGet.config ${HOME}/nuget.config
 
-RUN chown -R ${NB_UID} ${HOME}
+RUN groupadd ${NB_USER} -g ${NB_UID}
+RUN chown -R ${NB_UID}:${NB_UID} ${HOME}
 USER ${USER}
 
 # Install nteract 
-RUN pip install nteract_on_jupyter
+RUN pip install nteract_on_jupyter --no-cache-dir
 
 # Install lastest build from nuget.org
 RUN dotnet tool install -g Microsoft.dotnet-interactive --add-source "https://api.nuget.org/v3/index.json"
