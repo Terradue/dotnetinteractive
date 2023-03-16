@@ -1,2 +1,2 @@
-docker_image_name: cr.terradue.com/terradue/dotnetinteractive
+docker_image_name: ghcr.io/terradue/dotnetinteractive
 docker_image_version: 2.0.0

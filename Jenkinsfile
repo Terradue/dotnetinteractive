@@ -11,7 +11,7 @@ pipeline {
           def mType=getTypeOfVersion(env.BRANCH_NAME)
           def testsuite = docker.build(descriptor.docker_image_name + ":${mType}" + descriptor.docker_image_version, ".")
           testsuite.tag("${mType}latest")
-          docker.withRegistry('https://registry.hub.docker.com', 'cr.terradue.com-jenkins') {
+          docker.withRegistry('https://ghcr.io', '4d30292a-59f3-4a6c-a5aa-5f8ee24bef53') {
             testsuite.push("${mType}" + descriptor.docker_image_version)
             testsuite.push("${mType}latest")
           }
